@@ -19,9 +19,4 @@ SBT-9 0.0117
 SBT-10 0.0013
 M4011-0.0066
 */
-
-        Geiger-Counter-Arduino-OLED /微信图片_20190130163205.jpg
 ![image](https://github.com/Edgar-Jie/Geiger-Counter-Arduino-OLED/raw/master/Geiger-Counter-Arduino-OLED/20190130162942.jpg)
-
-
-      
