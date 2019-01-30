@@ -21,4 +21,4 @@ M4011-0.0066
 */
 
         Geiger-Counter-Arduino-OLED /微信图片_20190130163205.jpg
-      ![image](http://github.com/itmyhome2013/readme_add_pic/raw/master/images/nongshalie.jpg)
+      [image](http://github.com/Edgar-Jie/Geiger-Counter-Arduino-OLED/raw/Geiger-Counter-Arduino-OLED /微信图片_20190130163205.jpg)
