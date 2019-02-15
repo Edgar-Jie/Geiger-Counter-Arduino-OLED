@@ -1,21 +1,21 @@
 #include <Bounce2.h>
 #include <SPI.h>
-#include <Wire.h>                     //A4（SDA）和A5（SCL）
+#include <Wire.h>                     
 #include <Adafruit_GFX.h>             
 #include <Adafruit_SSD1306.h>       
 // #include <time.h>
-#define LOG_PERIOD 15000  //记录周期
-#define MAX_PERIOD 60000  //最大周期
+#define LOG_PERIOD 15000  
+#define MAX_PERIOD 60000  
 
-#define LOG_PERIOD1 100  //波形图记录周期
-#define MAX_PERIOD1 60000  //最大周期
+#define LOG_PERIOD1 100  
+#define MAX_PERIOD1 60000  
 
 #define OLED_RESET 5
 Adafruit_SSD1306 display(OLED_RESET);
 
 //#error("Height incorrect, please fix Adafruit_SSD1306.h!");
 
-#define CONV_FACTOR 0.0066  // 转换系数 - CPM至uSV / h
+#define CONV_FACTOR 0.0066  
 /*SBM-20 0.0057
 SBM-19 0.0021
 SI-29BG 0.0082
@@ -28,7 +28,7 @@ SBT-9 0.0117
 SBT-10 0.0013
 M4011-0.0066*/
 
- /*static const unsigned char PROGMEM lcd_bmp[] = //辐射图标
+ /*static const unsigned char PROGMEM lcd_bmp[] = 
 { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7F, 0xE0, 0x00,
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x80, 0x1C, 0x00,
@@ -305,18 +305,12 @@ static const unsigned char PROGMEM bt1[] =
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
 
-unsigned long counts;     //GM Tube事件的变量
+unsigned long counts;     
 unsigned long counts1;
 unsigned long counts2;
 unsigned long counts3;
-unsigned long cpm;      //CPM的变量
-unsigned long cpm1;      //波形CPM的变量
-//unsigned long usv;
-//unsigned long usv;
-//unsigned long y;
-unsigned int multiplier;  //此草图中用于计算CPM的变量
-unsigned int multiplier1; //波形 CPM的变量
-unsigned long previousMillis;  //时间测量的变量
+unsigned long cpm;     
+unsigned long previousMillis;  
 unsigned long previousMillis1 = 0; 
 const long interval = 40000;
 const long interval1 = 500; 
@@ -327,30 +321,29 @@ int bt = 0;
 int s1 = 0;
 int pbt = 0;
 //int a = 0;
-//unsigned long digits = 3 ;  //小数位数
+//unsigned long digits = 3 ;
 
   
 unsigned long CR = 0;
 
-void tube_impulse(){       //用于从Geiger Kit捕获事件的子程序
+void tube_impulse(){      
   counts++;
   counts1++;
 }
 
-float input_voltage = 0.0;	//输入电压
+float input_voltage = 0.0;	
 
 Bounce bouncer = Bounce();
 
-byte count;				//计数
-byte sensorArray[128];  //传感器阵列?
-byte drawHeight;		//画高度?
+byte count;				
+byte sensorArray[128]; 
+byte drawHeight;		
 int ms = 0;
 
-char filled = 'f'; //决定填充或点显示（F/D =点，任何其他填充）
-char drawDirection = 'L'; //从右到左决定绘图方向（R/L =从左到右，从右到左的任何其他）
-char slope = 'W'; //填充模式的斜率颜色白色或黑色斜率（W =白色，其他任何黑色。嗯，白色在此显示中是蓝色但你明白了）
+char filled = 'f'; 
+char drawDirection = 'L'; 
+char slope = 'W'; 
 
-//进度条变量
 int p2 = random(0, 100);
 //int counts1 = random(0, 32);
 
@@ -366,14 +359,13 @@ void drawPercentbar(int x, int y, int width, int height, int progress)
 	display.drawRect(x, y, width, height, WHITE);
 	display.fillRect(x + 2, y + 2, bar, height - 4, WHITE);
 
-	// 显示进度文本
 	if (height >= 11) {
 		display.setCursor(72,55);
 		//display.setCursor(0, 57);
 		display.setTextSize(1);
 		display.setTextColor(WHITE);
 		if (progress >= 50)
-			display.setTextColor(BLACK); // '倒'文字
+			display.setTextColor(BLACK); 
 
 		display.print(progress);
 		display.print("%");
@@ -381,18 +373,18 @@ void drawPercentbar(int x, int y, int width, int height, int progress)
 }
 
 
-void setup(){             //设置子程序
+void setup(){           
   counts = 0;
   counts1 = 0;
   
   cpm = 0;
   cpm1 = 0;
-  multiplier = MAX_PERIOD / LOG_PERIOD;      //计算乘数，取决于您的日志周期 60/15
-  multiplier1 = MAX_PERIOD1 / LOG_PERIOD1;	//波形周期
+  multiplier = MAX_PERIOD / LOG_PERIOD;     
+  multiplier1 = MAX_PERIOD1 / LOG_PERIOD1;	
   Serial.begin(9600);
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // 初始化OLED并将I2C地址设置为0x3C（对于128x32 OLED）
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
 
- for (count = 0; count <= 128; count++) //零所有元素
+ for (count = 0; count <= 128; count++)
   {
     sensorArray[count] = 0;
   }
@@ -401,12 +393,12 @@ void setup(){             //设置子程序
   
   //display.clearDisplay();
   //display.setCursor(36, 42);
-  //display.setTextColor(WHITE); //“inverted”的文字
-  //display.print(">Initialising..");//输出“INITIALISING .....”以显示
+  //display.setTextColor(WHITE);
+  //display.print(">Initialising..");
  
   //display.clearDisplay();
   
-  //display.drawBitmap(0, 0, logo, 128, 64, WHITE); //开机画面
+  //display.drawBitmap(0, 0, logo, 128, 64, WHITE);
   //delay(1200);
   display.display();
   
@@ -415,7 +407,7 @@ void setup(){             //设置子程序
   for (int p2 = 0; p2 <= 100; p2++)
   {
 	  display.clearDisplay();
-	  display.drawBitmap(0, 0, logo, 128, 64, WHITE); //开机画面
+	  display.drawBitmap(0, 0, logo, 128, 64, WHITE);
 
 	  drawPercentbar(30, 53, 98, 11, p2);
 
@@ -425,7 +417,7 @@ void setup(){             //设置子程序
 
 	  //if (p2 > 100) p2 = 0;
 
-	  delay(35);   //进度条速度
+	  delay(35); 
 
   }
   */
@@ -436,25 +428,24 @@ void setup(){             //设置子程序
   analogWrite(9,22 );
 
   
-  attachInterrupt(0, tube_impulse, FALLING); //定义外部中断
+  attachInterrupt(0, tube_impulse, FALLING);
       Serial.println("Start counter");
 
-bouncer .interval(5); // 设置参数间隔 = 5 ms
+bouncer .interval(5); 
  
 }
-
-void loop(){                                 //主程序
-  unsigned long currentMillis = millis(); //返回一个值‘该值代表当前cpu的时间’单位为微秒
+void loop{
+  unsigned long currentMillis = millis(); 
    unsigned long currentMillis1 = millis();
    unsigned long digits = 3;
    unsigned long digits1 = 3;
-   int range = 5048;  //波形取值范围
+   int range = 5048; 
    //0.0057=32
    //0.0015=122
    //double usv;
 
 if (bouncer.update())
- { //如果发生了事件
+ { 
   if (bouncer.read()==0)
   { bt++;
   }
@@ -470,7 +461,7 @@ if (bouncer.update())
     pbt = bt;
     s1 = 1;
 }
-   //当前cpu时间 - 之前cpu时间 >= 记录周期
+  
   if(currentMillis - previousMillis >= LOG_PERIOD){
     previousMillis = currentMillis;
     cpm = counts * multiplier;
@@ -490,9 +481,9 @@ if (bouncer.update())
 	//counts1 = 0;
   }
   
-  //cpm波形Y值
+
   if (currentMillis - previousMillis >= LOG_PERIOD1) {
-	  cpm1 = counts1 * multiplier1; //波形cpm1
+	  cpm1 = counts1 * multiplier1;
 	  Serial.println(cpm1);
 	  --cpm1;
 	  
@@ -512,7 +503,7 @@ if (bouncer.update())
 // }
   
  
-//电压表 PIN A3
+
  int analog_value = analogRead(A3);
    input_voltage = (analog_value * 5.0) / 1024.0; 
 
@@ -522,7 +513,7 @@ if (bouncer.update())
      input_voltage=0.0;
    } 
 
-   //超量报警
+  
    if (usv >= 0.52){
 	   digitalWrite(13, HIGH);
 
@@ -535,7 +526,7 @@ if (bouncer.update())
 
    
 
-//辐射图标和BUZZER
+
 if (counts == 1){
       //display.drawBitmap(-10, 0, lcd_bmp, 128, 32, WHITE);
     digitalWrite (7, HIGH); // buzzer ON
@@ -554,27 +545,27 @@ else
     }
   }
  
- //等待采样第一次usv结束 进度条 开机画面
+ 
  
  if (cpm <= 0) {
 	 for (int p2 = 0;  p2 <= 100; p2++)
 	 {
 		 display.clearDisplay();
-		 display.drawBitmap(0, 0, logo, 128, 64, WHITE); //开机画面
+		 display.drawBitmap(0, 0, logo, 128, 64, WHITE); 
 
 		 drawPercentbar(30, 53, 98, 11, p2);
 
 		 display.display();
 
-		 //p2++; //一次加2
+		 //p2++; 
 
-		 delay(160);   //进度条速度
+		 delay(160);   
 					   // if (p2 > 100) p2 = 0;
 		 //break;
 	 }
  }
  
- display.clearDisplay();             //清除缓冲区
+ display.clearDisplay();            
  if (usv >= 100) {
 
 
@@ -605,15 +596,12 @@ else
   display.setCursor(68,35);
   display.println("CPM");
 
-  display.setTextSize(2);           //文本大小设置
+  display.setTextSize(2);           
   display.setTextColor(WHITE);      
-  display.setCursor(0,35);           //文本起始位置（列，行）
-  display.println(cpm);             //输出“ ”来显示
+  display.setCursor(0,35);           
+  display.println(cpm);            
 
           
-
-
-//电池指示
 
 display.drawBitmap(0, 0, fl, 128, 32, WHITE);
 
@@ -645,7 +633,7 @@ drawHeight = map( cpm1 , 0, range , 0, 32 );
 	  }
 	*/
  
-  for (count = 1; count <= 80; count++ )  //波形起始结束宽度
+  for (count = 1; count <= 80; count++ ) 
   {
     if (filled == 'D' || filled == 'd')
     {
@@ -654,7 +642,7 @@ drawHeight = map( cpm1 , 0, range , 0, 32 );
         display.drawPixel(count, 32 - sensorArray[count - 1], WHITE);
 		delay(ms);
       }
-      else //否则，从右到左画点
+      else 
       {
         display.drawPixel(80 - count, 32 - sensorArray[count - 1], WHITE);
 		delay(ms);
@@ -671,7 +659,7 @@ drawHeight = map( cpm1 , 0, range , 0, 32 );
       {
         if (slope == 'W' || slope == 'w')
         {																			//drawline(xx1,y1,xx2,y2,0) 画线函数
-          display.drawLine(count, 32, count, 32 - sensorArray[count - 1], WHITE);  //在(x,y)平面，画从点A=(x1,Y1) 到点B=(x2,y2)的直线段
+          display.drawLine(count, 32, count, 32 - sensorArray[count - 1], WHITE);  
 		  delay(ms);
 		}
         else
@@ -700,10 +688,10 @@ drawHeight = map( cpm1 , 0, range , 0, 32 );
   }
 
   drawAxises();
-  display.display();  //在显示任何内容之前需要
-  display.clearDisplay(); //在新绘图之前清除
+  display.display();  
+  display.clearDisplay(); 
 
-  for (count = 80; count >= 2; count--) // 从160到2
+  for (count = 80; count >= 2; count--) 
   {
     sensorArray[count - 1] = sensorArray[count - 2];
   
@@ -711,7 +699,7 @@ drawHeight = map( cpm1 , 0, range , 0, 32 );
 
 }
 
-void drawAxises()  //分开以保持整洁。 这仅控制绘图背景！
+void drawAxises() 
 {
   display.setCursor(85, 0);
   display.setTextSize(2);
@@ -722,7 +710,6 @@ void drawAxises()  //分开以保持整洁。 这仅控制绘图背景！
   display.setTextColor(WHITE);
   display.print("CP");
 
-  //波形外框
 
   display.drawLine(0, 0, 0, 32, WHITE);
   display.drawLine(80, 0, 80, 32, WHITE);
@@ -740,8 +727,8 @@ void drawAxises()  //分开以保持整洁。 这仅控制绘图背景！
   }
   
   display.display();  
-   // delay(1000);                        //短暂的延迟(1/ms)
-  //display.clearDisplay();             //清晰的显示          
+   // delay(1000);                        
+  //display.clearDisplay();             
 }
 
 
